@@ -10,18 +10,19 @@ import android.widget.Button;
 
 import com.example.spaceinvaders.databinding.ActivityMainBinding;
 
+import java.util.Objects;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
-
+    @SuppressWarnings("all")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        com.example.spaceinvaders.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Button[] buttons = {binding.newGame, binding.multiplayer, binding.settings, binding.achievements};
@@ -35,9 +36,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        binding.exit.setOnClickListener((v)->{
-            android.os.Process.killProcess(android.os.Process.myPid());
-        });
+        binding.exit.setOnClickListener((v)-> android.os.Process.killProcess(android.os.Process.myPid()));
 
     }
 }

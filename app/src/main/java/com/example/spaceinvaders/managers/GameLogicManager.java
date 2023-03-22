@@ -13,16 +13,32 @@ import java.util.Random;
 
 public class GameLogicManager {
     private final GameState gameState;
+    private final WaveManager waveManager;
     private final Random randomGenerator;
+    private int waveNr = 0;
 
-    GameLogicManager(GameState gameState){
+    GameLogicManager(GameState gameState, WaveManager waveManager){
         this.gameState = gameState;
+        this.waveManager = waveManager;
         this.randomGenerator = new Random();
     }
 
     public void update(float[] gyroscopeValues){
+        if(gameState.getGameOver()){
+            return;
+        }
+
         int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
         int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+
+        if(gameState.getVillainList().size()==0){
+            for(Villain villain: waveManager.getNextWave(waveNr*5)){
+                gameState.getVillainList().add(villain);
+            }
+            gameState.getWaveNr().update("Wave: "+waveNr);
+            waveNr++;
+        }
+
         if(gameState.getMovable() && gyroscopeValues!=null){
             gameState.getShip().move(gyroscopeValues[1], gyroscopeValues[0]);
         }
@@ -73,7 +89,7 @@ public class GameLogicManager {
                     villain.dealDamage(bullet.getDamageValue());
                     if(!villain.isAlive()){
                         gameState.getPlayer().updateHighScore(villain.getScore());
-                        if(randomGenerator.nextInt()%10==0){
+                        if(randomGenerator.nextInt(10)==0){
                             Point pos = villain.getPosition();
                             if(randomGenerator.nextBoolean()){
                                 gameState.getBoxesList().add(gameState.getBoxFactory().produce(pos, Box.BoxType.UPGRADE));
@@ -99,7 +115,6 @@ public class GameLogicManager {
             if(bullet.intersects(gameState.getShip())){
                 gameState.getPlayer().changeHp(-1);
                 gameState.getPlayer().setBarrier();
-                gameState.getShip().recenter();
                 itb.remove();
             }
         }
@@ -133,10 +148,20 @@ public class GameLogicManager {
             }
         }
 
+        for(Villain villain: gameState.getVillainList()){
+            villain.move();
+        }
+
 
         gameState.getScore().update("Score: "+gameState.getPlayer().getHighScore());
         gameState.getHp().update("Hp: "+gameState.getPlayer().getHp());
 
-        //TODO villain shoot, villain move and creation (random path choice and villains in it), game over, music, waves, villains get stronger wave by wave
+        if(!gameState.getPlayer().isAlive()){
+            gameState.setGameOver(true);
+        }
+
+
+        //TODO ship movement, music, pause?, menu lag after back,
+        // achievements, data base, high scores, multiplayer, bluetooth, observers strings
     }
 }

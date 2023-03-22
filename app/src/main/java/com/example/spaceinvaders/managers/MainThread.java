@@ -24,10 +24,10 @@ public class MainThread extends Thread{
             canvas = null;
 
             try{
+                gameView.update();
                 canvas = holder.lockCanvas();
                 synchronized (holder){
                     gameView.draw(canvas);
-                    gameView.update();
                 }
             }
             catch (Exception e){

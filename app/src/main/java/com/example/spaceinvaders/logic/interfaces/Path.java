@@ -4,11 +4,12 @@ import android.graphics.Point;
 
 public interface Path {
     enum PathType{ //TODO create more path types
-        RECTANGLE, TRIANGLE,
+        SMALL_RECT, TRIANGLE, DTRIANGLE, STABLE, BIG_RECT, DIAMOND, HEXAGON
     }
 
     interface PathFactory{
-        Path produce(PathType type);
+        Path produce(PathType type, Point start);
     }
     Point get(int i);
+    int getSize();
 }

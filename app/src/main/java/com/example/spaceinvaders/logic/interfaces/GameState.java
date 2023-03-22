@@ -17,4 +17,6 @@ public interface GameState {
     TextImpl getWaveNr();
     void setMovable(boolean value);
     boolean getMovable();
+    boolean getGameOver();
+    void setGameOver(boolean value);
 }

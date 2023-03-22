@@ -1,6 +1,8 @@
 package com.example.spaceinvaders.managers;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,9 +12,18 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 
 import com.example.spaceinvaders.R;
+import com.example.spaceinvaders.activities.MainActivity;
 import com.example.spaceinvaders.gui.MyButton;
+import com.example.spaceinvaders.logic.BulletFactoryImpl;
 import com.example.spaceinvaders.logic.GameStateImpl;
+import com.example.spaceinvaders.logic.PathFactoryImpl;
+import com.example.spaceinvaders.logic.VillainBulletsSupplier;
+import com.example.spaceinvaders.logic.VillainFactoryImpl;
+import com.example.spaceinvaders.logic.interfaces.Bullet;
+import com.example.spaceinvaders.logic.interfaces.BulletsSupplier;
 import com.example.spaceinvaders.logic.interfaces.GameState;
+import com.example.spaceinvaders.logic.interfaces.Path;
+import com.example.spaceinvaders.logic.interfaces.Villain;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread mainThread;
@@ -20,15 +31,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private final GameLogicManager gameLogicManager;
     private final GyroscopeManager gyroscopeManager;
     private final MyButton moveButton;
+    private final GameState gameState;
+    private int gameOverCooldown = 200;
 
     public GameView(Context context){
         super(context);
         getHolder().addCallback(this);
         setFocusable(true);
 
-        GameState gameState = new GameStateImpl(this);
+        gameState = new GameStateImpl(this);
         drawManager = new DrawManager(gameState);
-        gameLogicManager = new GameLogicManager(gameState);
+        Path.PathFactory pathFactory = new PathFactoryImpl();
+        Villain.VillainFactory villainFactory = new VillainFactoryImpl(this);
+        Bullet.BulletFactory bulletFactory = new BulletFactoryImpl(this);
+        BulletsSupplier bulletsSupplier = new VillainBulletsSupplier(bulletFactory);
+        WaveManager waveManager = new WaveManagerImpl(villainFactory, pathFactory, bulletsSupplier);
+        gameLogicManager = new GameLogicManager(gameState, waveManager);
         gyroscopeManager = new GyroscopeManager(context);
         moveButton = new MyButton(Resources.getSystem().getDisplayMetrics().widthPixels, Resources.getSystem().getDisplayMetrics().heightPixels/2,
                 gameState::setMovable, BitmapFactory.decodeResource(getResources(), R.drawable.move));
@@ -42,6 +60,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update(){
+        if(gameState.getGameOver()){
+            if(gameOverCooldown>0){
+                gameOverCooldown--;
+            }
+            else{
+                Activity activity = (Activity) getContext();
+                activity.finish();
+            }
+        }
         gameLogicManager.update(gyroscopeManager.getGyroscopeValues());
     }
 
@@ -65,13 +92,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
         gyroscopeManager.unregister();
-        boolean again = true;
+        getHolder().removeCallback(this);
+        setFocusable(false);
 
-        while (again){
+        mainThread.setRunning(false);
+
+        while (mainThread!=null){
             try {
-                mainThread.setRunning(false);
                 mainThread.join();
-                again = false;
+                mainThread = null;
             }
             catch (InterruptedException e){
                 e.printStackTrace();

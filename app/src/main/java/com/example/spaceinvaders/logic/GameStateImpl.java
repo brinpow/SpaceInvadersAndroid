@@ -11,6 +11,7 @@ import com.example.spaceinvaders.logic.interfaces.Box;
 import com.example.spaceinvaders.logic.interfaces.Bullet;
 import com.example.spaceinvaders.logic.interfaces.BulletsSupplier;
 import com.example.spaceinvaders.logic.interfaces.GameState;
+import com.example.spaceinvaders.logic.interfaces.Path;
 import com.example.spaceinvaders.logic.interfaces.Player;
 import com.example.spaceinvaders.logic.interfaces.Ship;
 import com.example.spaceinvaders.logic.interfaces.Villain;
@@ -32,19 +33,18 @@ public class GameStateImpl implements GameState {
     private final TextImpl hp;
     private final TextImpl wave;
     private boolean movable;
+    private boolean gameOver=false;
 
     public GameStateImpl(SurfaceView view){
         int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
         int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
         Bullet.BulletFactory bulletFactory = new BulletFactoryImpl(view);
         BulletsSupplier shipBulletsSupplier = new ShipBulletSupplierImpl(bulletFactory);
-        BulletsSupplier villainBulletsSupplier = new VillainBulletsSupplier(bulletFactory);
-        ship = new ShipImpl(BitmapFactory.decodeResource(view.getResources(), R.drawable.spaceship), new Point(screenWidth /2, screenHeight), new Point(75,150), shipBulletsSupplier);
+        ship = new ShipImpl(BitmapFactory.decodeResource(view.getResources(), R.drawable.spaceship), new Point(screenWidth /2, screenHeight), new Point(75,75), shipBulletsSupplier);
         shipBulletList = new ArrayList<>();
         villainBulletList = new ArrayList<>();
-        Villain.VillainFactory villainFactory = new VillainFactoryImpl(view);
         villainList = new ArrayList<>();
-        player = new PlayerImpl(5);
+        player = new PlayerImpl(20);
         score = new TextImpl("Score: "+player.getHighScore());
         hp = new TextImpl("Hp: "+player.getHp());
         wave = new TextImpl("Wave: 0");
@@ -53,9 +53,6 @@ public class GameStateImpl implements GameState {
         openBoxMap.put(Box.BoxType.UPGRADE, ship::upgrade);
         openBoxMap.put(Box.BoxType.HEAL, ()->{player.changeHp(1);});
         boxFactory = new BoxFactoryImpl(view,openBoxMap);
-
-        villainList.add(villainFactory.produce(new Point(200, 300), Villain.VillainType.v1, villainBulletsSupplier));
-        villainList.add(villainFactory.produce(new Point(500, 300), Villain.VillainType.v1, villainBulletsSupplier));
     }
 
     @Override
@@ -116,5 +113,15 @@ public class GameStateImpl implements GameState {
     @Override
     public boolean getMovable() {
         return movable;
+    }
+
+    @Override
+    public boolean getGameOver() {
+        return gameOver;
+    }
+
+    @Override
+    public void setGameOver(boolean value) {
+        gameOver = value;
     }
 }

@@ -19,11 +19,12 @@ public interface Villain extends Shape, Drawable {
         }
     }
     interface VillainFactory{
-        Villain produce(Point pos, VillainType type, BulletsSupplier bulletsSupplier);
+        Villain produce(VillainType type, int modifier, BulletsSupplier bulletsSupplier, Path path);
     }
     void dealDamage(int damage);
     boolean isAlive();
     void move();
+    void move(int i);
     Point getPosition();
     int getScore();
     List<Bullet> shoot();

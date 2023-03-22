@@ -21,12 +21,13 @@ public class VillainImpl extends ShapeImpl implements com.example.spaceinvaders.
     private final Path path;
     private int pathIndex = 0;
 
-    public VillainImpl(Point pos, Bitmap image, int hp, VillainType type, Path path, BulletsSupplier bulletsSupplier){
-        super(pos, image);
+    public VillainImpl(Bitmap image, int hp, VillainType type, Path path, BulletsSupplier bulletsSupplier){
+        super(new Point(0, 0), image);
         this.hp = hp;
         this.type = type;
         this.bulletsSupplier = bulletsSupplier;
         this.path = path;
+        move(0);
     }
 
 
@@ -42,7 +43,16 @@ public class VillainImpl extends ShapeImpl implements com.example.spaceinvaders.
 
     @Override
     public void move() {
+        pathIndex = pathIndex%path.getSize();
         Point newPos = path.get(pathIndex++);
+        posX = newPos.x - (float)(image.getWidth()/2);
+        posY = newPos.y - (float)(image.getHeight()/2);
+    }
+    @Override
+    public void move(int i) {
+        pathIndex = i+1;
+        pathIndex = pathIndex%path.getSize();
+        Point newPos = path.get(i);
         posX = newPos.x - (float)(image.getWidth()/2);
         posY = newPos.y - (float)(image.getHeight()/2);
     }
@@ -60,7 +70,7 @@ public class VillainImpl extends ShapeImpl implements com.example.spaceinvaders.
     @Override
     public List<Bullet> shoot() {
         List<Bullet> bullets = new ArrayList<>();
-        if(shootCooldown <= 0 && random.nextInt()%20 == 0){
+        if(shootCooldown <= 0 && random.nextInt(250) == 0){
                 shootCooldown = 30;
                 return bulletsSupplier.produce(null, (int) (posX + image.getWidth()/2), (int) (posY+ image.getHeight()));
         }
