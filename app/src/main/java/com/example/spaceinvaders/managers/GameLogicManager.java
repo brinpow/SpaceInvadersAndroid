@@ -3,6 +3,7 @@ package com.example.spaceinvaders.managers;
 import android.content.res.Resources;
 import android.graphics.Point;
 
+import com.example.spaceinvaders.database.Counter;
 import com.example.spaceinvaders.logic.interfaces.Box;
 import com.example.spaceinvaders.logic.interfaces.Bullet;
 import com.example.spaceinvaders.logic.interfaces.GameState;
@@ -35,8 +36,10 @@ public class GameLogicManager {
             for(Villain villain: waveManager.getNextWave(waveNr*5)){
                 gameState.getVillainList().add(villain);
             }
-            gameState.getWaveNr().update("Wave: "+waveNr);
-            waveNr++;
+            if(gameState.getVillainList().size()!=0){
+                waveNr++;
+                gameState.getWaveNr().update("Wave: "+waveNr);
+            }
         }
 
         if(gameState.getMovable() && gyroscopeValues!=null){
@@ -88,8 +91,9 @@ public class GameLogicManager {
                     isHit = true;
                     villain.dealDamage(bullet.getDamageValue());
                     if(!villain.isAlive()){
+                        Counter.increase(Counter.AchievementType.VILLAIN, 1);
                         gameState.getPlayer().updateHighScore(villain.getScore());
-                        if(randomGenerator.nextInt(10)==0){
+                        if(randomGenerator.nextInt(4)==0){
                             Point pos = villain.getPosition();
                             if(randomGenerator.nextBoolean()){
                                 gameState.getBoxesList().add(gameState.getBoxFactory().produce(pos, Box.BoxType.UPGRADE));
@@ -161,7 +165,6 @@ public class GameLogicManager {
         }
 
 
-        //TODO ship movement, music, pause?, menu lag after back,
-        // achievements, data base, high scores, multiplayer, bluetooth, observers strings
+        //TODO multiplayer, bluetooth, observers strings, refactor ship, hp text, delete player, villain/boxes randomness, game over
     }
 }

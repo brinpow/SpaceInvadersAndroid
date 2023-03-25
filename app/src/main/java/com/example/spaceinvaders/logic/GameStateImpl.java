@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.view.SurfaceView;
 
 import com.example.spaceinvaders.R;
+import com.example.spaceinvaders.database.Counter;
 import com.example.spaceinvaders.gui.TextImpl;
 import com.example.spaceinvaders.logic.interfaces.Box;
 import com.example.spaceinvaders.logic.interfaces.Bullet;
@@ -50,8 +51,13 @@ public class GameStateImpl implements GameState {
         wave = new TextImpl("Wave: 0");
         boxList = new ArrayList<>();
         Map<Box.BoxType, Box.OpenBoxFunction> openBoxMap = new HashMap<>();
-        openBoxMap.put(Box.BoxType.UPGRADE, ship::upgrade);
-        openBoxMap.put(Box.BoxType.HEAL, ()->{player.changeHp(1);});
+        openBoxMap.put(Box.BoxType.UPGRADE, ()->{
+            Counter.increase(Counter.AchievementType.UPGRADES, 1);
+            ship.upgrade();
+        });
+        openBoxMap.put(Box.BoxType.HEAL, ()->{
+            Counter.increase(Counter.AchievementType.HEAL, 1);
+            player.changeHp(1);});
         boxFactory = new BoxFactoryImpl(view,openBoxMap);
     }
 

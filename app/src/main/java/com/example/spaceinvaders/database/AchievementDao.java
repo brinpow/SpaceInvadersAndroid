@@ -3,18 +3,20 @@ package com.example.spaceinvaders.database;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import java.util.List;
 
 @Dao
-public interface AchievementDao { //TODO implement update method properly
+public interface AchievementDao {
     @Insert
-    void insert();
+    void insert(Achievement achievement);
 
-    @Update
-    void updateRecord(Achievement achievement);
+    @Query("UPDATE achievements SET value = :value WHERE name = :name")
+    void updateRecord(String name, int value);
 
     @Query("SELECT * FROM achievements")
     List<Achievement> getAllAchievements();
+
+    @Query("SELECT * FROM achievements WHERE name = :name")
+    Achievement getAchievement(String name);
 }

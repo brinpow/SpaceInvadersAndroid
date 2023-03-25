@@ -13,28 +13,21 @@
         android:theme="@style/Theme.SpaceInvaders"
         tools:targetApi="31">
         <activity
-            android:name=".activities.Achievements"
+            android:name=".activities.AchievementsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.Multiplayer"
+            android:name=".activities.MultiplayerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.NewGame"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".activities.Settings"
+            android:name=".activities.NewGameActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

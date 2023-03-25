@@ -1,6 +1,7 @@
 package com.example.spaceinvaders.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -14,7 +15,6 @@ import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity {
-
     @SuppressWarnings("all")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +25,10 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).hide();
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        Button[] buttons = {binding.newGame, binding.multiplayer, binding.settings, binding.achievements};
-        Class<?>[] classes = {NewGame.class, Multiplayer.class, Settings.class, Achievements.class};
+        Button[] buttons = {binding.newGame, binding.multiplayer, binding.achievements};
+        Class<?>[] classes = {NewGameActivity.class, MultiplayerActivity.class, AchievementsActivity.class};
 
-        for(int i=0; i<4; i++){
+        for(int i=0; i<3; i++){
             int fi = i;
             buttons[i].setOnClickListener((v)->{
                 Intent intent = new Intent(this, classes[fi]);

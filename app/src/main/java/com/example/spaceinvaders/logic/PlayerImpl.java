@@ -1,5 +1,7 @@
 package com.example.spaceinvaders.logic;
 
+import com.example.spaceinvaders.database.Counter;
+
 public class PlayerImpl implements com.example.spaceinvaders.logic.interfaces.Player {
 
     private int hp;
@@ -35,6 +37,8 @@ public class PlayerImpl implements com.example.spaceinvaders.logic.interfaces.Pl
 
     @Override
     public void updateHighScore(int amount) {
+        Counter.increase(Counter.AchievementType.SCORE, amount);
+        Counter.increaseScore(amount);
         score += amount;
     }
 

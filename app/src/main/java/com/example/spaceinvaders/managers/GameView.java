@@ -13,6 +13,9 @@ import androidx.annotation.NonNull;
 
 import com.example.spaceinvaders.R;
 import com.example.spaceinvaders.activities.MainActivity;
+import com.example.spaceinvaders.database.AppDataBase;
+import com.example.spaceinvaders.database.Counter;
+import com.example.spaceinvaders.database.HighScore;
 import com.example.spaceinvaders.gui.MyButton;
 import com.example.spaceinvaders.logic.BulletFactoryImpl;
 import com.example.spaceinvaders.logic.GameStateImpl;
@@ -92,8 +95,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
         gyroscopeManager.unregister();
-        getHolder().removeCallback(this);
-        setFocusable(false);
 
         mainThread.setRunning(false);
 

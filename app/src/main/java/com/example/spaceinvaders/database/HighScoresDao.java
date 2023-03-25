@@ -12,7 +12,7 @@ public interface HighScoresDao {
     @Insert
     void insert(HighScore highScore);
 
-    @Query("SELECT * FROM high_scores")
+    @Query("SELECT * FROM high_scores ORDER BY highScore DESC")
     List<HighScore> getAllHighScores();
 
     @Delete

@@ -16,6 +16,12 @@ public class HighScore {
         return id;
     }
 
+    public HighScore(){}
+    public HighScore(int id, int highScore){
+        this.id = id;
+        this.highScore = highScore;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
