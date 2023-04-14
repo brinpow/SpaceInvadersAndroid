@@ -4,6 +4,8 @@ import android.graphics.Point;
 
 import com.example.spaceinvaders.gui.Drawable;
 
+import java.util.List;
+
 public interface Box extends Drawable, Shape {
     enum BoxType{
         UPGRADE, HEAL,
@@ -14,10 +16,14 @@ public interface Box extends Drawable, Shape {
     }
 
     interface OpenBoxFunction{
-        void open();
+        void open(Ship ship);
+    }
+
+    interface BoxSpawner{
+        List<Box> create(Point pos);
     }
 
     void move();
     boolean isOnScreen(int screenWidth, int screenHeight);
-    void openBox();
+    void openBox(Ship ship);
 }

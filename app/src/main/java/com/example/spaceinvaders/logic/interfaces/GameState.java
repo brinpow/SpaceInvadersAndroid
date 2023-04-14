@@ -5,18 +5,20 @@ import com.example.spaceinvaders.gui.TextImpl;
 import java.util.List;
 
 public interface GameState {
-    Ship getShip();
+    List<Ship> getShips();
     List<Bullet> getShipBulletList();
     List<Bullet> getVillainBulletList();
     List<Villain> getVillainList();
     List<Box> getBoxesList();
-    Box.BoxFactory getBoxFactory();
-    Player getPlayer();
     TextImpl getScore();
-    TextImpl getHp();
+    List<TextImpl> getHps();
     TextImpl getWaveNr();
     void setMovable(boolean value);
     boolean getMovable();
     boolean getGameOver();
     void setGameOver(boolean value);
+    boolean getYouWon();
+    void setYouWon(boolean value);
+    int getHighScore();
+    void updateHighScore(int amount);
 }

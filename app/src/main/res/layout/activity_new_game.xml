@@ -23,35 +23,25 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/host"
+        android:id="@+id/normal"
         android:layout_width="237dp"
         android:layout_height="60dp"
-        android:text="Host"
+        android:text="Normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gameTittle"
-        app:layout_constraintVertical_bias="0.197" />
+        app:layout_constraintVertical_bias="0.342" />
 
     <Button
-        android:id="@+id/search"
+        android:id="@+id/survival"
         android:layout_width="237dp"
         android:layout_height="60dp"
         android:layout_marginTop="44dp"
-        android:text="search"
+        android:text="Survival"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/host"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/devicesView"
-        android:layout_width="328dp"
-        android:layout_height="247dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search" />
+        app:layout_constraintTop_toBottomOf="@+id/normal"
+        app:layout_constraintVertical_bias="0.036" />
 </androidx.constraintlayout.widget.ConstraintLayout>

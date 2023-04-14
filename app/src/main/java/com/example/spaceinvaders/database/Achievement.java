@@ -3,6 +3,7 @@ package com.example.spaceinvaders.database;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import org.jetbrains.annotations.NotNull;
@@ -12,12 +13,13 @@ public class Achievement {
     @PrimaryKey()
     @ColumnInfo(name = "name")
     @NotNull
-    private String name;
+    private String name="";
 
     @ColumnInfo(name = "value")
     private int value;
 
     public Achievement(){}
+    @Ignore
     public Achievement(@NonNull String name, int value){
         this.name = name;
         this.value = value;

@@ -1,7 +1,6 @@
 package com.example.spaceinvaders.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -36,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        binding.exit.setOnClickListener((v)-> android.os.Process.killProcess(android.os.Process.myPid()));
+        binding.exit.setOnClickListener((v)-> finishAndRemoveTask());
 
     }
 }

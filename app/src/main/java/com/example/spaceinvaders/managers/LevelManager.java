@@ -4,6 +4,6 @@ import com.example.spaceinvaders.logic.interfaces.Villain;
 
 import java.util.List;
 
-public interface WaveManager {
+public interface LevelManager {
     List<Villain> getNextWave(int modifier);
 }

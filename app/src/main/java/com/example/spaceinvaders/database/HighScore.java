@@ -2,6 +2,7 @@ package com.example.spaceinvaders.database;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "high_scores")
@@ -17,6 +18,7 @@ public class HighScore {
     }
 
     public HighScore(){}
+    @Ignore
     public HighScore(int id, int highScore){
         this.id = id;
         this.highScore = highScore;

@@ -77,7 +77,7 @@ public class Counter {
                 for(HighScore score: highScores){
                     maxNr = max(score.getId(), maxNr);
                 }
-                highScore.setId(maxNr);
+                highScore.setId(maxNr+1);
                 highScoresDao.insert(highScore);
             }
         }

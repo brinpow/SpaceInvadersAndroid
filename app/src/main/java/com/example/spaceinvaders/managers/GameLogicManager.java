@@ -7,25 +7,26 @@ import com.example.spaceinvaders.database.Counter;
 import com.example.spaceinvaders.logic.interfaces.Box;
 import com.example.spaceinvaders.logic.interfaces.Bullet;
 import com.example.spaceinvaders.logic.interfaces.GameState;
+import com.example.spaceinvaders.logic.interfaces.Ship;
 import com.example.spaceinvaders.logic.interfaces.Villain;
 
 import java.util.Iterator;
-import java.util.Random;
+import java.util.List;
 
 public class GameLogicManager {
     private final GameState gameState;
-    private final WaveManager waveManager;
-    private final Random randomGenerator;
+    private final LevelManager levelManager;
+    private final Box.BoxSpawner boxSpawner;
     private int waveNr = 0;
 
-    GameLogicManager(GameState gameState, WaveManager waveManager){
+    GameLogicManager(GameState gameState, LevelManager levelManager, Box.BoxSpawner boxSpawner){
         this.gameState = gameState;
-        this.waveManager = waveManager;
-        this.randomGenerator = new Random();
+        this.levelManager = levelManager;
+        this.boxSpawner = boxSpawner;
     }
 
-    public void update(float[] gyroscopeValues){
-        if(gameState.getGameOver()){
+    public void update(){
+        if(gameState.getGameOver() || gameState.getYouWon()){
             return;
         }
 
@@ -33,20 +34,31 @@ public class GameLogicManager {
         int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
         if(gameState.getVillainList().size()==0){
-            for(Villain villain: waveManager.getNextWave(waveNr*5)){
-                gameState.getVillainList().add(villain);
+            List<Villain> villains = levelManager.getNextWave(waveNr*5);
+            if(villains!=null){
+                for(Villain villain: villains){
+                    gameState.getVillainList().add(villain);
+                }
             }
+            else{
+                gameState.setYouWon(true);
+                return;
+            }
+
             if(gameState.getVillainList().size()!=0){
                 waveNr++;
                 gameState.getWaveNr().update("Wave: "+waveNr);
             }
         }
 
-        if(gameState.getMovable() && gyroscopeValues!=null){
-            gameState.getShip().move(gyroscopeValues[1], gyroscopeValues[0]);
+        for(Ship ship: gameState.getShips()){
+            ship.move(gameState.getMovable());
         }
-        for(Bullet bullet: gameState.getShip().shoot()){
-            gameState.getShipBulletList().add(bullet);
+
+        for(Ship ship: gameState.getShips()){
+            for(Bullet bullet: ship.shoot()){
+                gameState.getShipBulletList().add(bullet);
+            }
         }
 
         for(Villain villain: gameState.getVillainList()){
@@ -79,7 +91,6 @@ public class GameLogicManager {
 
         itb = gameState.getShipBulletList().iterator();
 
-        int i =0;
         while(itb.hasNext()){
             Bullet bullet = itb.next();
             boolean isHit = false;
@@ -92,15 +103,10 @@ public class GameLogicManager {
                     villain.dealDamage(bullet.getDamageValue());
                     if(!villain.isAlive()){
                         Counter.increase(Counter.AchievementType.VILLAIN, 1);
-                        gameState.getPlayer().updateHighScore(villain.getScore());
-                        if(randomGenerator.nextInt(4)==0){
-                            Point pos = villain.getPosition();
-                            if(randomGenerator.nextBoolean()){
-                                gameState.getBoxesList().add(gameState.getBoxFactory().produce(pos, Box.BoxType.UPGRADE));
-                            }
-                            else{
-                                gameState.getBoxesList().add(gameState.getBoxFactory().produce(pos, Box.BoxType.HEAL));
-                            }
+                        gameState.updateHighScore(villain.getScore());
+                        Point pos = villain.getPosition();
+                        for(Box box:boxSpawner.create(pos)){
+                            gameState.getBoxesList().add(box);
                         }
                         itv.remove();
                     }
@@ -116,10 +122,12 @@ public class GameLogicManager {
         itb = gameState.getVillainBulletList().iterator();
         while (itb.hasNext()){
             Bullet bullet = itb.next();
-            if(bullet.intersects(gameState.getShip())){
-                gameState.getPlayer().changeHp(-1);
-                gameState.getPlayer().setBarrier();
-                itb.remove();
+            for(Ship ship: gameState.getShips()){
+                if(bullet.intersects(ship)){
+                    ship.changeHp(-1);
+                    ship.setBarrier();
+                    itb.remove();
+                }
             }
         }
 
@@ -136,19 +144,25 @@ public class GameLogicManager {
         itBox = gameState.getBoxesList().iterator();
         while (itBox.hasNext()){
             Box box = itBox.next();
-            if(box.intersects(gameState.getShip())){
-                box.openBox();
-                itBox.remove();
+            for(Ship ship: gameState.getShips()){
+                if(box.intersects(ship)){
+                    box.openBox(ship);
+                    itBox.remove();
+                }
             }
         }
 
-        gameState.getPlayer().barrierTick();
+        for(Ship ship: gameState.getShips()){
+            ship.barrierTick();
+        }
 
         for (Villain villain : gameState.getVillainList()) {
-            if (villain.intersects(gameState.getShip())) {
-                gameState.getPlayer().changeHp(-1);
-                gameState.getPlayer().setBarrier();
-                gameState.getShip().recenter();
+            for(Ship ship: gameState.getShips()){
+                if (villain.intersects(ship)) {
+                    ship.changeHp(-1);
+                    ship.setBarrier();
+                    ship.recenter();
+                }
             }
         }
 
@@ -156,15 +170,12 @@ public class GameLogicManager {
             villain.move();
         }
 
-
-        gameState.getScore().update("Score: "+gameState.getPlayer().getHighScore());
-        gameState.getHp().update("Hp: "+gameState.getPlayer().getHp());
-
-        if(!gameState.getPlayer().isAlive()){
+        gameState.getShips().removeIf(ship -> !ship.isAlive()&&gameState.getShips().size()!=1);
+        if(gameState.getShips().size()==1 && !gameState.getShips().get(0).isAlive()){
             gameState.setGameOver(true);
         }
 
 
-        //TODO multiplayer, bluetooth, observers strings, refactor ship, hp text, delete player, villain/boxes randomness, game over
+        //TODO maybe create special shooting boss, maybe refactor achievements - normal/ survival/ multiplayer distinction, refactor path constants/villain velocity
     }
 }

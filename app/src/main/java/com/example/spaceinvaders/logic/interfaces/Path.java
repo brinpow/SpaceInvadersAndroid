@@ -3,7 +3,7 @@ package com.example.spaceinvaders.logic.interfaces;
 import android.graphics.Point;
 
 public interface Path {
-    enum PathType{ //TODO create more path types
+    enum PathType{
         SMALL_RECT, TRIANGLE, DTRIANGLE, STABLE, BIG_RECT, DIAMOND, HEXAGON
     }
 

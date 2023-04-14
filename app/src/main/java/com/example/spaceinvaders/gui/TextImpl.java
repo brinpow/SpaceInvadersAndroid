@@ -1,6 +1,8 @@
 package com.example.spaceinvaders.gui;
 
-public class TextImpl implements Text{
+import com.example.spaceinvaders.logic.interfaces.Observer;
+
+public class TextImpl implements Text, Observer {
     private String text;
 
     public TextImpl(String text){

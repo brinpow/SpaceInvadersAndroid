@@ -1,5 +1,6 @@
 package com.example.spaceinvaders.logic;
 
+import android.content.res.Resources;
 import android.graphics.Point;
 
 import com.example.spaceinvaders.logic.interfaces.Bullet;
@@ -18,8 +19,9 @@ public class VillainBulletsSupplier implements BulletsSupplier {
 
     @Override
     public List<Bullet> produce(Map<String, Integer> info, int posX, int posY) {
+        int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
         List<Bullet> bulletList = new ArrayList<>();
-        bulletList.add(factory.produce(new Point(posX, posY), 0, 5, Bullet.BulletType.VILLAIN));
+        bulletList.add(factory.produce(new Point(posX, posY), 0, (float) (screenHeight)/426, Bullet.BulletType.VILLAIN));
         return bulletList;
     }
 }
