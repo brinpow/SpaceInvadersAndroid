@@ -8,6 +8,7 @@ import com.example.spaceinvaders.logic.interfaces.Villain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class WaveCreatorImpl implements WaveCreator{
     private final Path.PathFactory pathFactory;
@@ -48,6 +49,8 @@ public class WaveCreatorImpl implements WaveCreator{
     }
 
     public List<Villain> getWave(int modifier, int waveNr, VillainsCreator villainsCreator) {
+        int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+        int sY = screenHeight/42;
         List<Villain> villainList = new ArrayList<>();
         switch (waveNr){
             case 0:
@@ -64,27 +67,27 @@ public class WaveCreatorImpl implements WaveCreator{
                 return createSimpleWave(new Point(), modifier, 5, villainsCreator);
             case 6:
                 villainList = createSimpleWave(new Point(), modifier,0, villainsCreator);
-                villainList.addAll(createSimpleWave(new Point(0,500),modifier, 0, villainsCreator));
+                villainList.addAll(createSimpleWave(new Point(0,10*sY),modifier, 0, villainsCreator));
                 return villainList;
             case 7:
                 villainList = createSimpleWave(new Point(), modifier, 1, villainsCreator);
-                villainList.addAll(createSimpleWave(new Point(screenWidth/2, 450),modifier,6, villainsCreator));
+                villainList.addAll(createSimpleWave(new Point(screenWidth/2, 9*sY),modifier,6, villainsCreator));
                 return villainList;
             case 8:
                 villainList = createSimpleWave(new Point(), modifier, 3, villainsCreator);
-                villainList.addAll(createSimpleWave(new Point(screenWidth/2, 500),modifier,6, villainsCreator));
+                villainList.addAll(createSimpleWave(new Point(screenWidth/2, 10*sY),modifier,6, villainsCreator));
                 return villainList;
             case 9:
                 villainList = createSimpleWave(new Point(), modifier, 5, villainsCreator);
-                villainList.addAll(createSimpleWave(new Point(screenWidth/2, 500),modifier, 6, villainsCreator));
+                villainList.addAll(createSimpleWave(new Point(screenWidth/2, 10*sY),modifier, 6, villainsCreator));
                 return villainList;
             case 10:
                 villainList = createSimpleWave(new Point(), modifier, 2, villainsCreator);
-                villainList.addAll(createSimpleWave(new Point(0, 600),modifier, 0, villainsCreator));
+                villainList.addAll(createSimpleWave(new Point(0, 12*sY),modifier, 0, villainsCreator));
                 return villainList;
             case 11:
                 villainList = createSimpleWave(new Point(), modifier, 0, villainsCreator);
-                villainList.addAll(createSimpleWave(new Point(0, 500),modifier,4, villainsCreator));
+                villainList.addAll(createSimpleWave(new Point(0, 10*sY),modifier,4, villainsCreator));
                 return villainList;
         }
         return villainList;

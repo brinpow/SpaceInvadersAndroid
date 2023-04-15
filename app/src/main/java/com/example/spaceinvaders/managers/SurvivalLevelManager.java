@@ -26,7 +26,7 @@ public class SurvivalLevelManager implements LevelManager{
             return new ArrayList<>();
         }
         waveCooldown = 100;
-        int waveNr = rand.nextInt(11);
+        int waveNr = rand.nextInt(12);
         return waveCreator.getWave(modifier, waveNr, villainsCreator);
     }
 }

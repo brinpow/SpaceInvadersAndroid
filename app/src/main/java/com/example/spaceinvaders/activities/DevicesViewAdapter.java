@@ -29,6 +29,7 @@ public class DevicesViewAdapter extends RecyclerView.Adapter<DevicesViewAdapter.
     private final Context context;
     private final List<BluetoothDevice> devices;
     private final BluetoothAdapter bluetoothAdapter;
+    static Thread connect;
 
     public DevicesViewAdapter(Context context, List<BluetoothDevice> devices, BluetoothAdapter bluetoothAdapter) {
         this.context = context;
@@ -53,8 +54,8 @@ public class DevicesViewAdapter extends RecyclerView.Adapter<DevicesViewAdapter.
         }
         holder.deviceName.setText(devices.get(position).getName() + "\n"+devices.get(position).getAddress());
         holder.join.setOnClickListener((v -> {
-            ConnectThread connectThread = new ConnectThread(context, devices.get(position),bluetoothAdapter);
-            connectThread.start();
+            connect = new ConnectThread(context, devices.get(position),bluetoothAdapter);
+            connect.start();
         }));
 
     }

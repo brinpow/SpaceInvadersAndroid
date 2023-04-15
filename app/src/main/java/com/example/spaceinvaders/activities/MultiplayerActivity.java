@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.spaceinvaders.R;
 import com.example.spaceinvaders.bluetooth.AcceptThread;
+import com.example.spaceinvaders.bluetooth.TransferService;
 import com.example.spaceinvaders.databinding.ActivityMultiplayerBinding;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class MultiplayerActivity extends AppCompatActivity {
     private final int REQUEST_DISCOVERABLE_BT = 0;
     private final int REQUEST_DISCOVER_BT = 1;
     private final int DISCOVERABLE_TIME = 240;
+    private AcceptThread accept;
     private BroadcastReceiver receiver;
     private final String[] requests = {BLUETOOTH_CONNECT, BLUETOOTH_SCAN, BLUETOOTH_ADVERTISE, ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION} ;
 
@@ -101,8 +103,8 @@ public class MultiplayerActivity extends AppCompatActivity {
             Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
             intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,DISCOVERABLE_TIME);
             startActivityForResult(intent,REQUEST_DISCOVERABLE_BT);
-            AcceptThread acceptThread = new AcceptThread(context, bluetoothAdapter);
-            acceptThread.start();
+            accept = new AcceptThread(context, bluetoothAdapter);
+            accept.start();
         });
 
         binding.search.setOnClickListener((v)->{
@@ -156,6 +158,8 @@ public class MultiplayerActivity extends AppCompatActivity {
         super.onDestroy();
         try{
             unregisterReceiver(receiver);
+            accept.cancel();
+            DevicesViewAdapter.connect.join(); //TODO if it is needed?
         }
         catch (Exception e){
             e.printStackTrace();

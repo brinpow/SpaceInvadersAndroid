@@ -1,5 +1,6 @@
 package com.example.spaceinvaders.managers;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -8,7 +9,11 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.Window;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.spaceinvaders.R;
 import com.example.spaceinvaders.bluetooth.TransferService;
 import com.example.spaceinvaders.database.Counter;
@@ -39,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+@SuppressLint("ViewConstructor")
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public enum GameType{
         NORMAL, SURVIVAL, HOST, CLIENT

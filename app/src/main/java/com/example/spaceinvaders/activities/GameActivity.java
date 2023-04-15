@@ -7,25 +7,32 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.Window;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.spaceinvaders.R;
+import com.example.spaceinvaders.bluetooth.TransferService;
 import com.example.spaceinvaders.database.AppDataBase;
 import com.example.spaceinvaders.database.Counter;
 import com.example.spaceinvaders.managers.GameView;
 
-public class GameActivity extends Activity {
+import java.util.Objects;
+
+public class GameActivity extends AppCompatActivity {
     private GameView gameView;
     private MediaPlayer mediaPlayer;
+    private GameView.GameType type;
 
 
     @Override
     @SuppressWarnings("all")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        Objects.requireNonNull(getSupportActionBar()).hide();
         String mode = getIntent().getStringExtra("mode");
+        type = GameView.GameType.valueOf(mode);
 
-        gameView = new GameView(this, GameView.GameType.valueOf(mode));
+        gameView = new GameView(this, type);
         setContentView(gameView);
         Counter.increase(Counter.AchievementType.GAMES, 1);
 
@@ -43,14 +50,23 @@ public class GameActivity extends Activity {
     @Override
     protected void onPause(){
         super.onPause();
-        Counter.updateAchievements(AppDataBase.getDB(this));
+        if(type.equals(GameView.GameType.NORMAL)||type.equals(GameView.GameType.SURVIVAL)){
+            Counter.updateAchievements(AppDataBase.getDB(this));
+        }
         mediaPlayer.pause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Counter.updateHighScores(AppDataBase.getDB(this), 5);
+        if(type.equals(GameView.GameType.NORMAL)||type.equals(GameView.GameType.SURVIVAL)){
+            Counter.updateHighScores(AppDataBase.getDB(this), 5);
+        }
+
+        if(type.equals(GameView.GameType.HOST)|| type.equals(GameView.GameType.CLIENT)){
+            TransferService.close();
+        }
+
         mediaPlayer.stop();
         mediaPlayer.release();
     }

@@ -48,5 +48,14 @@ public class TransferService {
         }
     }
 
+    public static void close(){
+        try {
+            inputStream.close();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

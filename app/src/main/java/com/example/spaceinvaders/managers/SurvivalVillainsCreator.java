@@ -1,5 +1,7 @@
 package com.example.spaceinvaders.managers;
 
+import android.content.res.Resources;
+
 import com.example.spaceinvaders.logic.interfaces.Path;
 import com.example.spaceinvaders.logic.interfaces.Villain;
 import java.util.ArrayList;
@@ -20,12 +22,13 @@ public class SurvivalVillainsCreator implements VillainsCreator{
 
     @Override
     public List<Villain> assignVillainsToPath(Path path, int modifier) {
+        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
         List<Villain> villainList = new ArrayList<>();
         List<Villain.VillainType> villainTypes = Arrays.asList(Villain.VillainType.values());
-        int villains = path.getSize()/60+1;
+        int villains = path.getSize()/(screenWidth/18)+1;
         for(int i=0;i<villains;i++){
             Villain villain = villainFactory.produce(villainTypes.get(rand.nextInt(7)),modifier,path, shootFunction);
-            villain.move(55*i);
+            villain.move((screenWidth/19)*i);
             villainList.add(villain);
         }
         return villainList;
