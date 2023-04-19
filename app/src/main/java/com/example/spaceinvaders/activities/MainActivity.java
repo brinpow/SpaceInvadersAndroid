@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.spaceinvaders.database.AppDataBase;
+import com.example.spaceinvaders.database.Counter;
 import com.example.spaceinvaders.databinding.ActivityMainBinding;
 
 import java.util.Objects;
@@ -24,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).hide();
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        AppDataBase db = AppDataBase.getDB(this);
+        Counter.initializeAchievements(db);
+
         Button[] buttons = {binding.newGame, binding.multiplayer, binding.achievements};
         Class<?>[] classes = {NewGameActivity.class, MultiplayerActivity.class, AchievementsActivity.class};
 
@@ -37,5 +42,11 @@ public class MainActivity extends AppCompatActivity {
 
         binding.exit.setOnClickListener((v)-> finishAndRemoveTask());
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Counter.shutDown();
     }
 }

@@ -18,11 +18,16 @@ import java.util.List;
 
 public class HighScoresViewAdapter extends RecyclerView.Adapter<HighScoresViewAdapter.ViewHolder> {
     private final Context context;
-    private final HighScoresDao highScoresDao;
+    private List<HighScore> highScores = null;
 
-    public HighScoresViewAdapter(Context context, HighScoresDao highScoresDao){
+    public HighScoresViewAdapter(Context context){
         this.context = context;
-        this.highScoresDao = highScoresDao;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setHighScores(List<HighScore> highScores){
+        this.highScores = highScores;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -35,15 +40,15 @@ public class HighScoresViewAdapter extends RecyclerView.Adapter<HighScoresViewAd
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull HighScoresViewAdapter.ViewHolder holder, int position) {
-        List<HighScore> highScores = highScoresDao.getAllHighScores();
         HighScore highScore = highScores.get(position);
         holder.name.setText("Score: "+highScore.getHighScore());
     }
 
     @Override
     public int getItemCount() {
-        List<HighScore> highScores = highScoresDao.getAllHighScores();
-        return highScores.size();
+        if(highScores!=null)
+            return highScores.size();
+        return 0;
     }
 
     public final static class ViewHolder extends RecyclerView.ViewHolder{

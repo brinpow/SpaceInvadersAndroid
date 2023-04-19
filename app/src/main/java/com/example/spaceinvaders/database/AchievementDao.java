@@ -6,17 +6,24 @@ import androidx.room.Query;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
+
 @Dao
 public interface AchievementDao {
     @Insert
-    void insert(Achievement achievement);
+    Completable insert(Achievement achievement);
 
     @Query("UPDATE achievements SET value = :value WHERE name = :name")
-    void updateRecord(String name, int value);
+    Completable updateRecord(String name, int value);
 
     @Query("SELECT * FROM achievements")
-    List<Achievement> getAllAchievements();
+    Single<List<Achievement>> getAchievements();
+
+    @Query("SELECT * FROM achievements")
+    Flowable<List<Achievement>> getAllAchievements();
 
     @Query("SELECT * FROM achievements WHERE name = :name")
-    Achievement getAchievement(String name);
+    Single<Achievement> getAchievement(String name);
 }

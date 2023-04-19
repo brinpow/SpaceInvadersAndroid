@@ -1,5 +1,6 @@
 package com.example.spaceinvaders.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +19,16 @@ import java.util.List;
 
 public class AchievementsViewAdapter extends RecyclerView.Adapter<AchievementsViewAdapter.ViewHolder> {
     private final Context context;
-    private final AchievementDao achievementDao;
+    private List<Achievement> achievements = null;
 
-    public AchievementsViewAdapter(Context context, AchievementDao achievementDao){
+    public AchievementsViewAdapter(Context context){
         this.context = context;
-        this.achievementDao = achievementDao;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setAchievements(List<Achievement> achievements){
+        this.achievements = achievements;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -34,7 +40,6 @@ public class AchievementsViewAdapter extends RecyclerView.Adapter<AchievementsVi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        List<Achievement> achievements = achievementDao.getAllAchievements();
         Achievement achievement = achievements.get(position);
         Counter.AchievementType type = Counter.AchievementType.valueOf(achievement.getName());
         holder.name.setText(type.getAchievementText(achievement.getValue()));
@@ -42,8 +47,9 @@ public class AchievementsViewAdapter extends RecyclerView.Adapter<AchievementsVi
 
     @Override
     public int getItemCount() {
-        List<Achievement> achievements = achievementDao.getAllAchievements();
-        return achievements.size();
+        if(achievements!=null)
+            return achievements.size();
+        return 0;
     }
 
     public final static class ViewHolder extends RecyclerView.ViewHolder{

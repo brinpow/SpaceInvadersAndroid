@@ -48,13 +48,13 @@ public class DrawManager {
         Paint paint = new Paint();
         paint.setColor(Color.GREEN);
         paint.setTextSize(75);
-        canvas.drawText(gameState.getScore().getText(), 50, paint.getTextSize(), paint);
+        canvas.drawText(gameState.getScore().getText(), 30, paint.getTextSize(), paint);
         paint.setColor(Color.RED);
         for(int i=0;i<gameState.getHps().size();i++){
             canvas.drawText(gameState.getHps().get(i).getText(), screenWidth - 250,(i+1)*paint.getTextSize(),paint);
         }
         paint.setColor(Color.BLUE);
-        canvas.drawText(gameState.getWaveNr().getText(), (float) (screenWidth/2) - 100,paint.getTextSize(),paint);
+        canvas.drawText(gameState.getWaveNr().getText(), (float) (screenWidth/2) - 90,paint.getTextSize(),paint);
 
         if(gameState.getGameOver()){
             paint.setColor(Color.RED);

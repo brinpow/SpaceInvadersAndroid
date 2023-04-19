@@ -178,5 +178,6 @@ public class GameLogicManager {
 
         //TODO maybe create special shooting boss, kill threads after quiting multi activity?
         // TODO what happens if host and search are working simultaneously, should adapter.cancelDiscovery be called or kill thread second option
+        // TODO  textimpl position score on wave, maybe not screen independent
     }
 }

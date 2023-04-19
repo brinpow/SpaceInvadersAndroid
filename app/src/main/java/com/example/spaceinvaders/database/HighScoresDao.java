@@ -7,14 +7,21 @@ import androidx.room.Query;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
+
 @Dao
 public interface HighScoresDao {
     @Insert
-    void insert(HighScore highScore);
+    Completable insert(HighScore highScore);
 
     @Query("SELECT * FROM high_scores ORDER BY highScore DESC")
-    List<HighScore> getAllHighScores();
+    Single<List<HighScore>> getHighScores();
+
+    @Query("SELECT * FROM high_scores ORDER BY highScore DESC")
+    Flowable<List<HighScore>> getAllHighScores();
 
     @Delete
-    void delete(HighScore highScore);
+    Completable delete(HighScore highScore);
 }
