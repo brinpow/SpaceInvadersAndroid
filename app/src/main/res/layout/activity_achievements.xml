@@ -47,19 +47,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/highScoreView"
-        app:layout_constraintVertical_bias="0.023" />
+        app:layout_constraintVertical_bias="0.088" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/achievementsView"
         android:layout_width="330dp"
         android:layout_height="271dp"
         android:layout_marginTop="12dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/achievementsText"
-        app:layout_constraintVertical_bias="0.0"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
